@@ -9,7 +9,8 @@ export default {
   name: "CanvasContent2",
   data() {
     return {
-      stage: ""
+      stage: "",
+      myShape: ""
     };
   },
   mounted() {
@@ -17,12 +18,33 @@ export default {
   },
   methods: {
     init() {
-      this.stage = new createjs.Stage("canvas");
-      this.drawShape();
+      this.canvas = document.getElementById("canvas");
+      this.stage = new createjs.Stage(canvas);
+      this.createShape();
+      //this.drawCircle(this.myShape.graphics);
+      this.drawPolyStar(this.myShape.graphics);
     },
-    drawShape() {
-      const myShape = new createjs.Shape();
-      this.stage.addChild(myShape);
+    createShape() {
+      this.myShape = new createjs.Shape();
+      this.myShape.x = this.canvas.width / 2;
+      this.myShape.y = this.canvas.height / 2;
+      this.stage.addChild(this.myShape);
+    },
+    drawCircle(myGraphics) {
+      myGraphics
+        .beginStroke("blue")
+        .beginFill("#00FFFF")
+        .drawCircle(0, 0, 40);
+      this.stage.update();
+    },
+    drawPolyStar(myGraphics) {
+      const randamNumber = Math.floor(Math.random() * 0xffffff);
+      const randamColor = createjs.Graphics.getRGB(randamNumber);
+      myGraphics
+        .beginStroke("blue")
+        .beginFill(randamColor)
+        .drawPolyStar(0, 0, 40, 5, 0.6, -90);
+      this.stage.update();
     }
   }
 };
