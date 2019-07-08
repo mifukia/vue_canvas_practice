@@ -1,6 +1,6 @@
 <template>
   <div class="canvasArea">
-    <canvas id="canvas" width="480" height="360"></canvas>
+    <canvas id="canvas" width="240" height="180"></canvas>
   </div>
 </template>
 
@@ -25,6 +25,12 @@ export default {
     init() {
       this.canvas = document.getElementById("canvas");
       this.stage = new createjs.Stage(canvas);
+      this.addBitmap();
+      this.stage.addChild(this.myBitmap);
+      createjs.Ticker.addEventListener("tick", this.stage);
+    },
+    addBitmap() {
+      this.myBitmap = new createjs.Bitmap("/img/pen.png");
     }
   }
 };
