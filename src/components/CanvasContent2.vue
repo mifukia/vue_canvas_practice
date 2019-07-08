@@ -1,6 +1,6 @@
 <template>
   <div class="canvasArea">
-    <canvas id="canvas" width="240" height="180"></canvas>
+    <canvas id="canvas" width="480" height="360"></canvas>
   </div>
 </template>
 
@@ -10,11 +10,20 @@ export default {
   data() {
     return {
       stage: "",
-      myShape: ""
+      myShape: "",
+      radius: 40
     };
   },
   mounted() {
     this.init();
+  },
+  computed: {
+    canvasHeight() {
+      return this.canvas.height;
+    },
+    canvasWidth() {
+      return this.canvas.width;
+    }
   },
   methods: {
     init() {
@@ -23,11 +32,13 @@ export default {
       this.createShape();
       //this.drawCircle(this.myShape.graphics);
       this.drawPolyStar(this.myShape.graphics);
+      this.setTween(this.myShape);
+      createjs.Ticker.addEventListener("tick", this.stage);
     },
     createShape() {
       this.myShape = new createjs.Shape();
-      this.myShape.x = this.canvas.width / 2;
-      this.myShape.y = this.canvas.height / 2;
+      this.setRandom();
+      this.myShape.y = 0 - this.radius; //this.canvas.height / 2;
       this.stage.addChild(this.myShape);
     },
     drawCircle(myGraphics) {
@@ -43,8 +54,32 @@ export default {
       myGraphics
         .beginStroke("blue")
         .beginFill(randamColor)
-        .drawPolyStar(0, 0, 40, 5, 0.6, -90);
+        .drawPolyStar(0, 0, this.radius, 5, 0.6, -90);
       this.stage.update();
+    },
+    rotate() {
+      this.myShape.rotation += 5;
+      this.stage.update();
+    },
+    setTween(target) {
+      createjs.Tween.get(target, {
+        loop: true
+      })
+        .to(
+          {
+            y: this.canvasHeight - this.radius,
+            rotation: 360
+          },
+          5000,
+          createjs.Ease.bounceOut
+        )
+        .wait(1000)
+        .to({ alpha: 0 }, 2500, createjs.Ease.circIn)
+        .call(this.setRandom);
+    },
+    setRandom() {
+      this.myShape.x = Math.random() * this.canvasWidth;
+      this.drawPolyStar(this.myShape.graphics);
     }
   }
 };
