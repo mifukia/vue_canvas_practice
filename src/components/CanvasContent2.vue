@@ -28,7 +28,7 @@ export default {
   methods: {
     init() {
       this.canvas = document.getElementById("canvas");
-      this.stage = new createjs.Stage(canvas);
+      this.stage = new createjs.Stage(this.canvas);
       this.createShape();
       //this.drawCircle(this.myShape.graphics);
       this.drawPolyStar(this.myShape.graphics);
